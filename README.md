@@ -9,27 +9,6 @@ basic-crud-api/
 └─ README.md
 `
 
----
-
-Setup and run
-
-1. Initialize project
-   `bash
-   mkdir basic-crud-api
-   cd basic-crud-api
-   npm init -y
-   npm install express
-   `
-
-2. Create index.js 
-
-3. Start server
-   `bash
-   node index.js
-   `
-   Server runs on http://localhost:3000
-
----
 
 index.js 
 
