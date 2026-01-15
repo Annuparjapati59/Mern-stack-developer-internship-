@@ -1,79 +1,127 @@
- CRUD API
+Basic CRUD API with Node.js + Express 
 
-1. Project Setup
-- Create a folder: basic-crud-api
-- Initialize Node.js:  
-  `bash
-  npm init -y
-  `
-- Install Express:  
-  `bash
-  npm install express
-  `
+Project structure
 
----
-
-2. Project Structure
 `
 basic-crud-api/
- ├── index.js        # Main server file
- ├── package.json    # Dependencies & scripts
- └── README.md       # Documentation
+├─ index.js
+├─ package.json
+└─ README.md
 `
 
 ---
 
-3. Code (index.js)
-Here’s a clean starter code for your CRUD API:
+Setup and run
 
-`javascript
-const express = require("express");
+1. Initialize project
+   `bash
+   mkdir basic-crud-api
+   cd basic-crud-api
+   npm init -y
+   npm install express
+   `
+
+2. Create index.js (paste the code below)
+
+3. Start server
+   `bash
+   node index.js
+   `
+   Server runs on http://localhost:3000
+
+---
+
+index.js (full working code)
+
+`js
+const express = require('express');
 const app = express();
 const PORT = 3000;
 
+// Middleware to parse JSON bodies
 app.use(express.json());
 
-// Temporary in-memory data
+// In-memory data store (no database)
 let users = [
-  { id: 1, name: "Annu", age: 22 },
-  { id: 2, name: "Rahul", age: 25 }
+  { id: 1, name: 'Annu', age: 22 },
+  { id: 2, name: 'Ravi', age: 24 }
 ];
 
-// CREATE
-app.post("/users", (req, res) => {
-  const newUser = req.body;
-  users.push(newUser);
-  res.status(201).json(newUser);
+// Health check
+app.get('/', (req, res) => {
+  res.json({ message: 'Basic CRUD API is running', version: '1.0.0' });
 });
 
-// READ (all)
-app.get("/users", (req, res) => {
-  res.json(users);
-});
+// CREATE: Add new user
+app.post('/users', (req, res) => {
+  const { name, age } = req.body;
 
-// READ (by ID)
-app.get("/users/:id", (req, res) => {
-  const user = users.find(u => u.id == req.params.id);
-  user ? res.json(user) : res.status(404).send("User not found");
-});
-
-// UPDATE
-app.put("/users/:id", (req, res) => {
-  const index = users.findIndex(u => u.id == req.params.id);
-  if (index !== -1) {
-    users[index] = { ...users[index], ...req.body };
-    res.json(users[index]);
-  } else {
-    res.status(404).send("User not found");
+  // Basic validation
+  if (!name || typeof age !== 'number') {
+    return res.status(400).json({ error: 'Invalid payload: name (string) and age (number) are required' });
   }
+
+  const newUser = {
+    id: users.length ? users[users.length - 1].id + 1 : 1,
+    name,
+    age
+  };
+
+  users.push(newUser);
+  res.status(201).json({ message: 'User created', data: newUser });
 });
 
-// DELETE
-app.delete("/users/:id", (req, res) => {
-  users = users.filter(u => u.id != req.params.id);
-  res.send("User deleted");
+// READ: Get all users
+app.get('/users', (req, res) => {
+  res.json({ count: users.length, data: users });
 });
 
+// READ: Get user by ID
+app.get('/users/:id', (req, res) => {
+  const id = Number(req.params.id);
+  const user = users.find(u => u.id === id);
+
+  if (!user) return res.status(404).json({ error: 'User not found' });
+  res.json({ data: user });
+});
+
+// UPDATE: Update user by ID
+app.put('/users/:id', (req, res) => {
+  const id = Number(req.params.id);
+  const { name, age } = req.body;
+
+  const index = users.findIndex(u => u.id === id);
+  if (index === -1) return res.status(404).json({ error: 'User not found' });
+
+  // Allow partial updates but keep validation simple
+  if (name !== undefined && typeof name !== 'string') {
+    return res.status(400).json({ error: 'Invalid name: must be a string' });
+  }
+  if (age !== undefined && typeof age !== 'number') {
+    return res.status(400).json({ error: 'Invalid age: must be a number' });
+  }
+
+  users[index] = {
+    ...users[index],
+    ...(name !== undefined ? { name } : {}),
+    ...(age !== undefined ? { age } : {})
+  };
+
+  res.json({ message: 'User updated', data: users[index] });
+});
+
+// DELETE: Remove user by ID
+app.delete('/users/:id', (req, res) => {
+  const id = Number(req.params.id);
+  const exists = users.some(u => u.id === id);
+
+  if (!exists) return res.status(404).json({ error: 'User not found' });
+
+  users = users.filter(u => u.id !== id);
+  res.json({ message: User with id ${id} deleted });
+});
+
+// Start server
 app.listen(PORT, () => {
   console.log(Server running on http://localhost:${PORT});
 });
@@ -81,33 +129,46 @@ app.listen(PORT, () => {
 
 ---
 
-4. Run the Server
-`bash
-node index.js
-`
-Server will run at: http://localhost:3000
+Postman testing (quick examples)
+
+- GET all users
+  - Method: GET
+  - URL: http://localhost:3000/users
+
+- GET user by ID
+  - Method: GET
+  - URL: http://localhost:3000/users/1
+
+- CREATE user
+  - Method: POST
+  - URL: http://localhost:3000/users
+  - Body (JSON):
+    `json
+    { "name": "Priya", "age": 21 }
+    `
+
+- UPDATE user
+  - Method: PUT
+  - URL: http://localhost:3000/users/2
+  - Body (JSON):
+    `json
+    { "name": "Ravi Kumar", "age": 25 }
+    `
+
+- DELETE user
+  - Method: DELETE
+  - URL: http://localhost:3000/users/2
 
 ---
 
-5. Test with Postman
-- POST → http://localhost:3000/users  
-- GET → http://localhost:3000/users  
-- GET by ID → http://localhost:3000/users/1  
-- PUT → http://localhost:3000/users/1  
-- DELETE → http://localhost:3000/users/1
+README.md 
 
----
+`md
 
- README 
-
-`markdown
-
-Basic CRUD API 
+Basic CRUD API (Node.js + Express)
 
 Objective
-A simple CRUD (Create, Read, Update, Delete) API built with Node.js and Express.  
-
----
+A CRUD API demonstrating Create, Read, Update, Delete operations using an in-memory data store.
 
 Tech Stack
 - Node.js
@@ -115,104 +176,57 @@ Tech Stack
 - JavaScript
 - Postman (for testing)
 
----
-
-Setup Instructions
-1. Clone the repository:
-   `bash
-   git clone https://github.com/your-username/basic-crud-api.git
-   `
-2. Navigate into the folder:
-   `bash
-   cd basic-crud-api
-   `
-3. Install dependencies:
-   `bash
-   npm install
-   `
-4. Start the server:
-   `bash
-   node index.js
-   `
-
----
-
- Project Structure
+Setup
+`bash
+npm install
+node index.js
 `
-basic-crud-api/
- ├── index.js        # Main server file
- ├── package.json    # Dependencies & scripts
- └── README.md       # Documentation
+Server: http://localhost:3000
+
+Endpoints
+- GET / — Health check
+- POST /users — Create user
+- GET /users — Read all users
+- GET /users/:id — Read user by ID
+- PUT /users/:id — Update user by ID
+- DELETE /users/:id — Delete user by ID
+
+Data Model
+`json
+{ "id": number, "name": string, "age": number }
 `
 
----
+Testing (Postman)
+- Create:
+`json
+POST /users
+{ "name": "Priya", "age": 21 }
+`
+- Update:
+`json
+PUT /users/1
+{ "name": "Annu P", "age": 23 }
+`
 
-API Endpoints
-| Method | Endpoint         | Description          |
-|--------|------------------|----------------------|
-| POST   | /users           | Create new user      |
-| GET    | /users           | Get all users        |
-| GET    | /users/:id       | Get user by ID       |
-| PUT    | /users/:id       | Update user by ID    |
-| DELETE | /users/:id       | Delete user by ID    |
-
----
-
- Testing
-Use Postman to test all endpoints:
-- Create → POST /users
-- Read → GET /users and GET /users/:id
-- Update → PUT /users/:id
-- Delete → DELETE /users/:id
+Notes
+- In-memory storage only (no database).
+- Focus on clarity, validation, and clean responses.
+`
 
 ---
 
+Report template 
 
+- Setup steps:  
+  - Created project, initialized npm, installed Express, added index.js, started server on port 3000.
 
- Add Postman Screenshots in README
+- API explanation:  
+  - Endpoints: /users for CRUD, in-memory array for data, JSON request/response, basic validation and error handling.
 
-1. Test each API endpoint in Postman  
-   - Run your server (node index.js)  
-   - Open Postman and send requests for:
-     - POST /users → Create user  
-     - GET /users → Get all users  
-     - GET /users/:id → Get user by ID  
-     - PUT /users/:id → Update user  
-     - DELETE /users/:id → Delete user  
+- Problems faced and solutions:  
+  - Example: JSON parsing error → added express.json() middleware.  
+  - ID not found → returned 404 with clear message.  
+  - Partial updates → used object spread to merge fields safely.
 
-2
-
- API Testing Screenshots
-
-Create User (POST /users)
-   !Create User
-
-Get All Users (GET /users)
-   !Get Users
-
-Update User (PUT /users/:id)
-   !Update User
-
-Delete User (DELETE /users/:id)
-   !Delete User
-   `
-
----
-
-
-`markdown
-
- API Testing 
-
-Create User (POST /users)
-!Create User
-
-Get All Users (GET /users)
-!Get Users
-
-Update User (PUT /users/:id)
-!Update User
-
-Delete User (DELETE /users/:id)
-!Delete User
-
+- Learnings:  
+  - Request/response cycle, REST patterns, status codes (201, 400, 404)
