@@ -167,36 +167,7 @@ Use Postman to test all endpoints:
 
 ---
 
-Learnings
-- How to set up a Node.js project
-- How to use Express.js for APIs
-- CRUD operations design
-- Testing APIs with Postman
-- Writing clear documentation
 
----
-
-Final Note
-This project is a beginner-friendly open-source starter.  
-Focus is on clarity, learning, and documentation rather than complexity.
-`
-
----
-
- Now you just need to:
-1. Create a GitHub repo named basic-crud-api.  
-2. Add your files (index.js, package.json, README.md).  
-3. Push it using:
-   `bash
-   git init
-   git add .
-   git commit -m "Initial CRUD API project"
-   git branch -M main
-   git remote add origin https://github.com/your-username/basic-crud-api.git
-   git push -u origin main
-   `
-
----
 
  Add Postman Screenshots in README
 
