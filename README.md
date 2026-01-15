@@ -337,13 +337,5 @@ Push to GitHub
    git push -u origin main
    `
 
----
 
-Quick bilingual note (Hindi + English)
-
-- Goal: Ek simple CRUD API banana jo Express par chalti hai—Create, Read, Update, Delete sab endpoints ready.  
-- Testing: Postman se requests bhejo—GET, POST, PUT, DELETE—aur responses verify karo.  
-- Documentation: README me setup, endpoints, problems & learnings clearly likhe gaye hain—assignment ke report ke liye perfect.
-
----
 
