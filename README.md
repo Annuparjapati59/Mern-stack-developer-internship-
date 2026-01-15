@@ -21,7 +21,7 @@ Setup and run
    npm install express
    `
 
-2. Create index.js (paste the code below)
+2. Create index.js 
 
 3. Start server
    `bash
@@ -31,7 +31,7 @@ Setup and run
 
 ---
 
-index.js (full working code)
+index.js 
 
 `js
 const express = require('express');
@@ -41,7 +41,7 @@ const PORT = 3000;
 // Middleware to parse JSON bodies
 app.use(express.json());
 
-// In-memory data store (no database)
+// In-memory data store
 let users = [
   { id: 1, name: 'Annu', age: 22 },
   { id: 2, name: 'Ravi', age: 24 }
@@ -129,7 +129,7 @@ app.listen(PORT, () => {
 
 ---
 
-Postman testing (quick examples)
+Postman testing 
 
 - GET all users
   - Method: GET
@@ -174,7 +174,7 @@ Tech Stack
 - Node.js
 - Express.js
 - JavaScript
-- Postman (for testing)
+- Postman 
 
 Setup
 `bash
@@ -209,7 +209,7 @@ PUT /users/1
 `
 
 Notes
-- In-memory storage only (no database).
+- In-memory storage only.
 - Focus on clarity, validation, and clean responses.
 `
 
