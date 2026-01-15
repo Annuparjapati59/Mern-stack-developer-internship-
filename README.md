@@ -180,28 +180,7 @@ Use Postman to test all endpoints:
      - PUT /users/:id → Update user  
      - DELETE /users/:id → Delete user  
 
-2. Take screenshots  
-   - Capture the request + response window in Postman.  
-   - Save them as PNG/JPG files (e.g., postman-create.png, postman-get.png).  
-
-3. Add screenshots to your GitHub repo  
-   - Place them in a folder called assets/ inside your project.  
-   - Example structure:
-     `
-     basic-crud-api/
-      ├── index.js
-      ├── package.json
-      ├── README.md
-      └── assets/
-          ├── postman-create.png
-          ├── postman-get.png
-          ├── postman-update.png
-          └── postman-delete.png
-     `
-
-4. Reference screenshots in README  
-   Use Markdown image syntax:
-   `markdown
+2
 
  API Testing Screenshots
 
@@ -220,11 +199,10 @@ Delete User (DELETE /users/:id)
 
 ---
 
-Example README Section with Screenshots
 
 `markdown
 
- API Testing Screenshots
+ API Testing 
 
 Create User (POST /users)
 !Create User
